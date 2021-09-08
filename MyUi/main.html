@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>主页</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+   
+    <link rel="stylesheet" href="css/layui.css" media="all">
+    <style> 
+        #name {
+            font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            padding:10px; 
+            font-size:xx-large;
+        }
+        
+       .layui-card-header{
+           text-align: center;
+           margin: auto;
+           max-width: 800px;
+           background-color:rgb(57, 61, 73);
+           letter-spacing: 10px;
+           font-size: xx-large;
+           color: #fff;
+           box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 10px 10px rgba(0,0,0,0.23);
+       }
+        
+       .layui-card-body{
+            display: flex;
+            margin: auto;
+        }
+
+        .layui-card{
+            
+            text-align: center;
+            margin:80px 10px; 
+            width: 24%;
+            height: 500px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 10px 10px rgba(0,0,0,0.23);
+            align-items: center;
+        }
+
+
+       
+        .goods_pic{
+            padding: 40px 0px;
+            width:40%;
+            height: 60%;
+            margin:auto;
+          
+        }
+
+        .showcase{
+            width: 100%;
+            height: 100%;
+        }
+
+        .name_text{
+            font-size: xx-large;
+            color:rgb(57, 61, 73);
+        }
+
+    </style>
+</head>
+<body>
+    
+    <ul class="layui-nav" lay-filter="test">
+        <li class="layui-nav-item">
+            <a href="login.html" onclick="Logout()">返回登录界面</a>
+        </li>
+        <li class="layui-nav-item layui-this ">
+            <a href="">主页</a>  
+        </li>
+        <li class="layui-nav-item">
+            <a href="order.html">下订单</a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="ordermanage.html">订单管理</a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="javascript:;">联系我们</a>
+        </li>
+    </ul>
+    
+    <h3 id="name"></h3>
+
+    <div class="hot_goods">
+        <div class="layui-card-header">推荐商品</div>
+        <div class="layui-card-body">
+            <div class="layui-card">
+                <div class="goods_pic">
+                    <image class="showcase" src="images/cup1.png" ></image>
+                </div>
+                <div class="goods_name">
+                    <text class="name_text">红盖红杯</text>
+                </div>
+            </div>
+            
+            <div class="layui-card">
+                <div class="goods_pic">
+                    <image class="showcase" src="images/cup2.png" ></image>
+                </div>
+                <div class="goods_name">
+                    <text class="name_text">红盖红杯</text>
+                </div>
+            </div>
+            
+            <div class="layui-card">
+                <div class="goods_pic">
+                    <image class="showcase" src="images/cup3.png" ></image>
+                </div>
+                <div class="goods_name">
+                    <text class="name_text">红盖红杯</text>
+                </div>
+            </div>
+            
+            <div class="layui-card">
+                <div class="goods_pic">
+                    <image class="showcase" src="images/cup4.png" ></image>
+                </div>
+                <div class="goods_name">
+                    <text class="name_text">红盖红杯</text>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+
+    <script src="layui.all.js" charset="utf-8"></script>
+
+    <script>
+
+        window.onload = checklogin();
+
+        document.getElementById("name").innerHTML = `欢迎您，${sessionStorage.getItem("username")}`;
+
+
+        function Logout(){
+            sessionStorage.setItem("username", null);
+            sessionStorage.setItem("hasLogin", false);
+            sessionStorage.setItem("adminname", null);
+            sessionStorage.setItem("hasAdminLogin", false);
+            sessionStorage.setItem("userId", null);
+        }
+        
+        //函数 window.onload = checklogin();
+        function checklogin() {
+            var hasLogin = sessionStorage.getItem("hasLogin");
+            
+            if (hasLogin === "true")
+            {
+
+                layui.layer.alert(`欢迎！${sessionStorage.getItem("username")}`)
+            }
+            else if(hasLogin !== "true"){
+
+                layui.layer.alert(
+                        '您尚未登录，要先登录吗',
+                         function(){
+                         return window.location.href = "login.html" ;
+                        }
+                )
+
+            }
+        };
+
+       
+
+
+
+
+    </script>
+</body>
+
+</html>

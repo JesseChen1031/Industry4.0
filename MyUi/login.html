@@ -1,0 +1,335 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="css/layui.css" media="all">
+    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+
+    <style>
+        
+        #regi{
+            cursor: pointer;
+            text-align: center;
+            
+        }
+        #regi:hover{
+            color:chocolate;
+        }
+
+        body {
+            background-image: url('images/login.jpg');
+        }
+
+        .layui-card {
+            max-width: 600px;
+            max-height: 450px;
+            margin: auto;
+            margin-top: 15em;
+            border-radius: 5%;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 10px 10px rgba(0,0,0,0.23);
+            padding: 2rem;
+        }
+        
+    </style>
+
+</head>
+<body>
+
+
+
+    <div class="layui-card">
+
+
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+            <legend>请登录</legend>
+        </fieldset>
+
+        <form class="layui-form layui-form-pane" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">账号</label>
+                <div class="layui-input-block">
+                    <input name="accountName" lay-verify="accountname" type="text" autocomplete="off" placeholder="请输入账号" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-block">
+                    <input name="password" type="password" lay-verify="pass" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+
+
+
+
+            <div class="layui-form-item">
+                <label for="mode" class="layui-form-label">登陆模式</label>
+                <div class="layui-input-block" >
+               
+                    <input type="radio" name="mode" value="user" lay-verify="otherReq" lay-filter="user" title="用户登陆">
+                    <input type="radio" name="mode" value="admin" lay-verify="otherReq" lay-filter="admin"  title="管理员登陆">
+                    <input type="radio" name="mode" value="operator" lay-verify="otherReq" lay-filter="operator"  title="操作员登陆">
+                    
+                </div>
+            </div>
+
+
+
+
+
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="login">登录</button>
+                </div>
+
+            </div>
+        </form>
+
+        <!-- <div id="regi">
+            <a href="registration.html">还没有账户？点击此处注册</a>
+        </div> -->
+
+        <div>
+            <p  id="regi" onclick="regis()">还没有账户？点击此处注册</p>
+        </div>
+
+
+    </div>
+
+
+    <script src="layui.all.js" charset="utf-8"></script>
+    <script src="JQurey3.5.1.js" type="text/javascript"></script>
+    <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+
+    <script>
+
+    var loginType = 'user';
+
+    layui.use(['form'], function () {
+        var form = layui.form
+            , layer = layui.layer
+
+        //自定义验证规则
+        form.verify({
+            accountname: function (value) {
+                if (value.length < 5) {
+                    return '账号至少得5个字符啊';
+                }
+            }
+            , pass: [
+                /^[\S]{6,12}$/
+                , '密码必须6到12位，且不能出现空格'
+            ]
+            , otherReq: function(value,item){
+                    var $ = layui.$;
+                    var verifyName=$(item).attr('name')
+                    , verifyType=$(item).attr('type')
+                    ,formElem=$(item).parents('.layui-input-block')//获取当前所在的form元素，如果存在的话
+                    ,verifyElem=formElem.find('input[name='+verifyName+']')//获取需要校验的元素
+                    ,isTrue= verifyElem.is(':checked')//是否命中校验
+                    ,focusElem = verifyElem.next().find('i.layui-icon');//焦点元素
+                    if(!isTrue || !value){
+                    //定位焦点
+                    focusElem.css(verifyType=='radio'?{"color":"#FF5722"}:{"border-color":"#FF5722"});
+                    //对非输入框设置焦点
+                    focusElem.first().attr("tabIndex","1").css("outline","0").blur(function() {
+                        focusElem.css(verifyType=='radio'?{"color":""}:{"border-color":""});
+                    }).focus();
+                    return '必填项不能为空';
+                }
+            }
+
+        });
+
+
+        //监听切换登录模式的单选框
+        form.on('radio(user)', function(data){
+            this.checked ? loginType = 'user' : null;
+                layer.alert(loginType, {
+                    title: "当前登陆状态"
+                });
+       
+        });  
+
+
+        form.on('radio(admin)', function(data){
+            this.checked ? loginType = 'admin' : null;
+                layer.alert(loginType, {
+                    title: "当前登陆状态"
+                });
+        });  
+
+
+        form.on('radio(operator)', function(data){
+            this.checked ? loginType = 'operator' : null;
+                layer.alert(loginType, {
+                    title: "当前登陆状态"
+                });
+        });  
+       
+
+        form.on('submit(login)', function (data) {
+            
+
+            var accountName = data.field.accountName;
+
+            var password = data.field.password;
+
+
+            
+
+            if (loginType === 'user') {
+                layui.$.ajax({
+                    type: 'GET',
+                    url: 'http://localhost:56912/api/accounts/GetClientByName/' + accountName,
+                    success: function (res) {
+
+                        if (res.password === password) {
+                            layer.open({
+                                title: '通知'
+                                , content: '登录成功！'
+                                , btn: ['确认']
+                                ,yes: function () {
+                                    sessionStorage.setItem("username", name);
+                                    sessionStorage.setItem("hasLogin", true);
+                                    sessionStorage.setItem("userId", res.id);
+                                    sessionStorage.setItem("storePosition", res.storePosition);
+                                    return window.location.href = 'main.html';
+                                }
+                                ,cancel:function () {
+                                    sessionStorage.setItem("username", name);
+                                    sessionStorage.setItem("hasLogin", true);
+                                    sessionStorage.setItem("userId", res.id);
+                                    sessionStorage.setItem("storePosition", res.storePosition);
+                                    return window.location.href = 'main.html';
+                                }
+                            });
+
+                            
+                            
+
+                        }
+                        else {
+                            layui.layer.alert('登录失败，用户名或密码错误')
+                        }
+
+                    },
+                    error: function (err) {
+                        console.log(err);
+                        return layui.layer.alert('登录失败，请检查网络连接');
+
+                    }
+                });
+            }
+            else if (loginType === 'admin') {
+                layui.$.ajax({
+                    type: 'GET',
+                    url: 'http://localhost:56912/api/accounts/GetAdminByName/' + accountName,
+                    success: function (res) {
+
+
+                        if (res.password === password) {
+                           
+                            layer.open({
+                                title: '通知'
+                                , content: '管理员登录成功'
+                                , btn: ['确认']
+                                , yes: function () {
+                                    sessionStorage.setItem("adminname", name);
+                                    sessionStorage.setItem("hasAdminLogin", true);
+                                    return window.location.href = 'orderadmin.html';
+                                }
+                                ,cancel: function () {
+                                    sessionStorage.setItem("adminname", name);
+                                    sessionStorage.setItem("hasAdminLogin", true);
+                                    return window.location.href = 'orderadmin.html';
+                                }
+                            });
+                        
+                            
+
+                        }
+                        else {
+                            layui.layer.alert('登录失败，用户名或密码错误')
+                        }
+
+                    },
+                    error: function (err) {
+
+                        return layui.layer.alert('登录失败，请检查网络连接');
+
+                    }
+                })
+
+            }
+            else if (loginType === 'operator') {
+                layui.$.ajax({
+                    type: 'GET',
+                    url: 'http://localhost:56912/api/accounts/GetOperatorByName/' + accountName,
+                    success: function (res) {
+
+
+                        if (res.password === password) {
+                           
+                            layer.open({
+                                title: '通知'
+                                , content: '操作员登录成功'
+                                , btn: ['确认']
+                                , yes: function () {
+                                    sessionStorage.setItem("operatorname", name);
+                                    sessionStorage.setItem("hasOperatorLogin", true);
+                                    return window.location.href = 'orderadmin.html';
+                                }
+                                ,cancel: function () {
+                                    sessionStorage.setItem("operatorname", name);
+                                    sessionStorage.setItem("hasOperatorLogin", true);
+                                    return window.location.href = 'orderadmin.html';
+                                }
+                            });
+                        
+                            
+
+                        }
+                        else {
+                            layui.layer.alert('登录失败，用户名或密码错误')
+                        }
+
+                    },
+                    error: function (err) {
+
+                        return layui.layer.alert('登录失败，请检查网络连接');
+
+                    }
+                })
+
+            };
+
+            return false;
+
+        });
+      
+
+
+            
+    });
+
+    function regis(){
+            layui.layer.open({
+                type: 2,
+                skin: 'layui-layer-rim', //加上边框
+                area: ['500px', '600px'], //宽高
+                content: 'registration.html'
+            });
+    }
+
+
+
+    </script>
+
+</body>
+</html>
